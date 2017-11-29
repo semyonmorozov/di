@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Autofac;
 
 namespace TagsCloudVisualization
 {
@@ -11,16 +12,27 @@ namespace TagsCloudVisualization
     {
         static void Main(string[] args)
         {
-            var bgColor = Color.DarkMagenta;
-            var textColor = Color.White;
-            var screenBounds = Screen.PrimaryScreen.Bounds;
-            var vizualizator = new TagsCloudVisualizator(screenBounds.Width,screenBounds.Height);
+            var cloudDesign = new SimpleCloudDesign(Color.DarkMagenta, new Font("Tahoma", 20), new SolidBrush(Color.White), Screen.PrimaryScreen.Bounds);
+
+            var builder = new ContainerBuilder();
+            builder.Register(c=>cloudDesign).As<ICloudDesign>();
+            builder.RegisterType<Spiral>();
+            builder.RegisterType<UniquePositivePointsFromSpiral>();
+            builder.RegisterType<CircularCloudLayouter>().As<IRectangleLayouter>();
+            builder.RegisterType<TagsCloudVisualizator>();
+
+            var container = builder.Build();
+
+            var vizualizator = container.Resolve <TagsCloudVisualizator>();
+
             string pathToProjDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
             var tags = ParseTagsFromFile(String.Concat(pathToProjDir, @"\wordsStats.txt"));
-            vizualizator.AddTags(tags);
-            var bitmap = vizualizator.Visualize(bgColor, textColor);
+            var bitmap = vizualizator.Visualize(tags);
             var path = Path.Combine(Path.GetTempPath(), "result.png");
             bitmap.Save(path);
+
+            Console.WriteLine(path);
+            Console.ReadKey();
         }
 
         private static Dictionary<string, int> ParseTagsFromFile(string filePath)
