@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace TagsCloudVisualization
+namespace TagsCloudVisualization.RectangleLayouter
 {
     class CircularCloudLayouter : IRectangleLayouter
     {
-        private readonly UniquePositivePointsFromSpiral uniquePositivePoints;
+        private readonly ICloudShape cloudShape;
 
         private readonly List<Rectangle> layout = new List<Rectangle>();
 
@@ -18,9 +17,9 @@ namespace TagsCloudVisualization
             return copyOfLayout.ToList();
         }
 
-        public CircularCloudLayouter(UniquePositivePointsFromSpiral uniquePositivePoints)
+        public CircularCloudLayouter(ICloudShape cloudShape)
         {
-            this.uniquePositivePoints = uniquePositivePoints;
+            this.cloudShape = cloudShape;
         }
 
         private static Rectangle CreateRecnagleByCenter(Point center, Size size)
@@ -33,15 +32,15 @@ namespace TagsCloudVisualization
 
         public Rectangle PutNextRectangle(Size rectangleSize)
         {
-            uniquePositivePoints.MoveNext();
-            var rectangle = CreateRecnagleByCenter((Point)uniquePositivePoints.Current, rectangleSize);
+            cloudShape.MoveNext();
+            var rectangle = CreateRecnagleByCenter(cloudShape.Current, rectangleSize);
             while (layout.Any(r => r.IntersectsWith(rectangle)))
             {
-                uniquePositivePoints.MoveNext();
-                rectangle = CreateRecnagleByCenter((Point)uniquePositivePoints.Current, rectangleSize);
+                cloudShape.MoveNext();
+                rectangle = CreateRecnagleByCenter(cloudShape.Current, rectangleSize);
             }
             layout.Add(rectangle);
-            uniquePositivePoints.Reset();
+            cloudShape.Reset();
             return rectangle;
         }
     }

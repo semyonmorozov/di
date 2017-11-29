@@ -66,15 +66,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CircularCloudLayouter.cs" />
-    <Compile Include="ICloudDesign.cs" />
-    <Compile Include="IRectangleLayouter.cs" />
-    <Compile Include="SimpleCloudDesign.cs" />
+    <Compile Include="ITagsReader.cs" />
+    <Compile Include="RectangleLayouter\CircularCloudLayouter.cs" />
+    <Compile Include="CloudDesign\ICloudDesign.cs" />
+    <Compile Include="CloudShape\ICloudShape.cs" />
+    <Compile Include="RectangleLayouter\IRectangleLayouter.cs" />
+    <Compile Include="CloudDesign\SimpleCloudDesign.cs" />
     <Compile Include="TagsCloudVisualizator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Spiral.cs" />
-    <Compile Include="UniquePositivePointsFromSpiral.cs" />
+    <Compile Include="CloudShape\SpiralCloudShape.cs" />
+    <Compile Include="TxtTagReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

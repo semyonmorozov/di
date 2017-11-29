@@ -1,26 +1,26 @@
 ﻿using System.Drawing;
 
-namespace TagsCloudVisualization
+namespace TagsCloudVisualization.CloudDesign
 {
     public class SimpleCloudDesign : ICloudDesign
     {
         public Color BackgroundColor { get; }
         public int CloudWidth { get; }
         public int CloudHeight { get; }
-        private readonly Font font;
+        private readonly string fontName;
         private readonly Brush stringBrush;
-        public SimpleCloudDesign(Color bgColor, Font font,Brush stringBrush,Rectangle drawingField)
+        public SimpleCloudDesign(Color bgColor, string fontName, Brush stringBrush,Rectangle drawingField)
         {
             CloudWidth = drawingField.Width;
             CloudHeight = drawingField.Height;
             BackgroundColor = bgColor;
-            this.font = font;
+            this.fontName = fontName;
             this.stringBrush = stringBrush;
         }
 
         public Font GetFont(int weight)
         {
-            return font;
+            return new Font(fontName,weight);
         }
 
         public Brush GetStringBrush()
