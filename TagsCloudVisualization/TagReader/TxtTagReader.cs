@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 
-namespace TagsCloudVisualization
+namespace TagsCloudVisualization.TagReader
 {
     public class TxtTagReader : ITagsReader
     {
