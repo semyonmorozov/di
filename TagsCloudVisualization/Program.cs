@@ -65,10 +65,10 @@ namespace TagsCloudVisualization
             [Option('f', "font", DefaultValue = "Tahoma", HelpText = "Font type.")]
             public string Font { get; set; }
 
-            [Option('w', "width", HelpText = "Width of result image")]
+            [Option('w', "width", HelpText = "Width of result image. Default value is your screen width.")]
             public int Width { get; set; }
 
-            [Option('h', "height", HelpText = "Height of result image")]
+            [Option('h', "height", HelpText = "Height of result image. Default value is your screen height.")]
             public int Height { get; set; }
         }
     }
