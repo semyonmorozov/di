@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using TagsCloudVisualization.TagHandler;
+using TagsCloudVisualization.TagReader;
 
 namespace TagsCloudVisualization
 {
@@ -8,16 +11,19 @@ namespace TagsCloudVisualization
         private readonly Bitmap tagCloud;
         private readonly IRectangleLayouter layouter;
         private readonly ICloudDesign cloudDesign;
+        private readonly ITagsReader tagReader;
+        private readonly IEnumerable<ITagsHandler> tagHandlerers;
 
-
-        public TagsCloudVisualizator(IRectangleLayouter layouter, ICloudDesign cloudDesign)
+        public TagsCloudVisualizator(IRectangleLayouter layouter, ICloudDesign cloudDesign, ITagsReader tagReader, IEnumerable<ITagsHandler> tagHandlerers)
         {
+            this.tagReader = tagReader;
+            this.tagHandlerers = tagHandlerers;
             this.layouter = layouter;
             this.cloudDesign = cloudDesign;
             tagCloud = new Bitmap(cloudDesign.CloudWidth, cloudDesign.CloudHeight);
         }
 
-        public Bitmap Visualize(Dictionary<string, int>tags)
+        private Bitmap Visualize(Dictionary<string, int>tags)
         {
             var drawer = Graphics.FromImage(tagCloud);
             drawer.Clear(cloudDesign.BackgroundColor);
@@ -34,6 +40,18 @@ namespace TagsCloudVisualization
             }
             
             return tagCloud;
+        }
+
+        public Bitmap Visualize(string filePath)
+        {
+            var tags = tagReader.ReadTags(filePath);
+            var handledTags = HandleTags(tags);
+            return Visualize(handledTags);
+        }
+
+        private Dictionary<string, int> HandleTags(Dictionary<string, int> tags)
+        {
+            return tagHandlerers.Aggregate(tags, (current, handler) => handler.Handle(current));
         }
     }
 }
