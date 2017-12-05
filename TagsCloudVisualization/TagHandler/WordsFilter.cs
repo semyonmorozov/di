@@ -4,32 +4,11 @@ namespace TagsCloudVisualization.TagHandler
 {
     class WordsFilter : ITagsHandler
     {
-        private readonly List<string> boringWords;
+        private readonly List<string> forbiddenWords;
 
-        public WordsFilter()
+        public WordsFilter(List<string>forbiddenWords)
         {
-            boringWords = new List<string>
-            {
-                "i",
-                "you",
-                "me",
-                "he",
-                "she",
-                "a",
-                "it",
-                "and",
-                "on",
-                "of",
-                "for",
-                "to",
-                "the",
-                "that"
-            };
-        }
-
-        public WordsFilter(List<string>boringWords)
-        {
-            this.boringWords = boringWords;
+            this.forbiddenWords = forbiddenWords;
         }
 
         public Dictionary<string, int> Handle(Dictionary<string, int> tags)
@@ -38,7 +17,7 @@ namespace TagsCloudVisualization.TagHandler
             foreach (var word in tags.Keys)
             {
                 var lowWord = word.ToLower();
-                if (!boringWords.Contains(lowWord))
+                if (!forbiddenWords.Contains(lowWord))
                 {
                     handledTags.Add(lowWord,tags[word]);
                 }
