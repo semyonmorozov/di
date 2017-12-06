@@ -18,12 +18,15 @@ namespace TagsCloudVisualization
         static void Main(string[] args)
         {
             var options = new CloudOptions();
-            if (Parser.Default.ParseArgumentsStrict(args, options))
+
+            if (!Parser.Default.ParseArgumentsStrict(args, options)) return;
+
+            if (!options.IsValid(out var message)) Console.WriteLine(message);
+            else
             {
                 Visualize(options).Save("tagsCloud.png");
                 Console.WriteLine("Done");
             }
-            else Console.WriteLine("Invalid arguments");
         }
 
         private static Bitmap Visualize(CloudOptions cloudOptions)

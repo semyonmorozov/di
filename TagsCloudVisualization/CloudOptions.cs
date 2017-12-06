@@ -28,6 +28,21 @@ namespace TagsCloudVisualization
         [Option("filter", HelpText = "Path to file with words which must be filtered. Each word must be on a separate line.")]
         public string ForbiddenWords { get; set; }
         
+        public bool IsValid(out string message)
+        {
+            message = "";
+
+            if (Width < 0)
+                message += "Width must be pozitive.\r\n";
+            if (Height < 0)
+                message += "Height must be pozitive.\r\n";
+            if (Width > 10000)
+                message += "Width must be less than 10000.\r\n";
+            if (Height > 10000)
+                message += "Height must be less than 10000.\r\n";
+
+            return message == "";
+        }
     }
     
 }
