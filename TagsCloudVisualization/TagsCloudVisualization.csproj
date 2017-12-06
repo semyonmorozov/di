@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.CloudOptions.cs" />
     <Compile Include="RectangleLayouter\CircularCloudLayouter_Should.cs" />
     <Compile Include="TagHandler\ITagsHandler.cs" />
     <Compile Include="TagHandler\TagsUnifier.cs" />

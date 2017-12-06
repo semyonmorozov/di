@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TagsCloudVisualization.CloudDesign;
+using TagsCloudVisualization.RectangleLayouter;
 using TagsCloudVisualization.TagHandler;
 using TagsCloudVisualization.TagReader;
 

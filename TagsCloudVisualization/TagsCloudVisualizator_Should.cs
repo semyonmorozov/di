@@ -3,6 +3,9 @@ using System.Drawing;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using TagsCloudVisualization.CloudDesign;
+using TagsCloudVisualization.CloudShape;
+using TagsCloudVisualization.RectangleLayouter;
 using TagsCloudVisualization.TagHandler;
 using TagsCloudVisualization.TagReader;
 
