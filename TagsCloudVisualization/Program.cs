@@ -17,7 +17,7 @@ namespace TagsCloudVisualization
     {
         static void Main(string[] args)
         {
-            var options = new Options();
+            var options = new CloudOptions();
             if (Parser.Default.ParseArgumentsStrict(args, options))
             {
                 Visualize(options).Save("tagsCloud.png");
@@ -26,27 +26,27 @@ namespace TagsCloudVisualization
             else Console.WriteLine("Invalid arguments");
         }
 
-        private static Bitmap Visualize(Options options)
+        private static Bitmap Visualize(CloudOptions cloudOptions)
         {
-            var width = options.Width == 0 ? Screen.PrimaryScreen.Bounds.Width : options.Width;
-            var height = options.Height == 0 ? Screen.PrimaryScreen.Bounds.Height : options.Height;
+            var width = cloudOptions.Width == 0 ? Screen.PrimaryScreen.Bounds.Width : cloudOptions.Width;
+            var height = cloudOptions.Height == 0 ? Screen.PrimaryScreen.Bounds.Height : cloudOptions.Height;
 
             var cloudDesign = new SimpleCloudDesign(
-                Color.FromName(options.BackgroundColor),
-                options.Font,
-                new SolidBrush(Color.FromName(options.FontColor)),
+                Color.FromName(cloudOptions.BackgroundColor),
+                cloudOptions.Font,
+                new SolidBrush(Color.FromName(cloudOptions.FontColor)),
                 new Rectangle(0,0,width,height));
 
             var builder = new ContainerBuilder();
             builder.Register(c => cloudDesign).As<ICloudDesign>();
-            var shape = new SpiralCloudShape(cloudDesign,options.Spreading);
+            var shape = new SpiralCloudShape(cloudDesign,cloudOptions.Spreading);
             builder.Register(s=>shape).As<ICloudShape>();
             builder.RegisterType<CircularCloudLayouter>().As<IRectangleLayouter>();
             builder.RegisterType<TxtTagReader>().As<ITagsReader>();
             builder.RegisterType<TagsUnifier>().As<ITagsHandler>();
-            if (options.ForbiddenWords!=null)
+            if (cloudOptions.ForbiddenWords!=null)
             {
-                var filter = new WordsFilter(ReadStringsFromTxt(options.ForbiddenWords));
+                var filter = new WordsFilter(ReadStringsFromTxt(cloudOptions.ForbiddenWords));
                 builder.Register(f => filter).As<ITagsHandler>();
             }
             builder.RegisterType<TagsCloudVisualizator>();
@@ -55,7 +55,7 @@ namespace TagsCloudVisualization
 
             var vizualizator = container.Resolve<TagsCloudVisualizator>();
 
-            return vizualizator.Visualize(options.TagsFile);
+            return vizualizator.Visualize(cloudOptions.TagsFile);
         }
 
         private static List<string> ReadStringsFromTxt(string path)
@@ -69,34 +69,7 @@ namespace TagsCloudVisualization
             }
             return strings;
         }
-
-        class Options
-        {
-            [Option('t', "tags-file", Required = true, HelpText = "Path to file with tags.")]
-            public string TagsFile { get; set; }
-
-            [Option('s', "spreading", DefaultValue = 0.1, HelpText = "Spreading of tags layout.")]
-            public double Spreading { get; set; }
-
-            [Option('b', "bg-color", DefaultValue = "white", HelpText = "Background color.")]
-            public string BackgroundColor { get; set; }
-
-            [Option('c', "font-color", DefaultValue = "black", HelpText = "Font color.")]
-            public string FontColor { get; set; }
-
-            [Option('f', "font", DefaultValue = "Tahoma", HelpText = "Font type.")]
-            public string Font { get; set; }
-
-            [Option('w', "width", HelpText = "Width of result image. Default value is your screen width.")]
-            public int Width { get; set; }
-
-            [Option('h', "height", HelpText = "Height of result image. Default value is your screen height.")]
-            public int Height { get; set; }
-
-            [Option("filter", HelpText = "Path to file with words which must be filtered. Each word must be on a separate line.")]
-            public string ForbiddenWords { get; set; }
-        }
-    }
+}
 
     
     
