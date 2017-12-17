@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="CloudOptions.cs" />
     <Compile Include="RectangleLayouter\CircularCloudLayouter_Should.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="TagHandler\ITagsHandler.cs" />
     <Compile Include="TagHandler\TagsUnifier.cs" />
     <Compile Include="TagHandler\WordsFilter.cs" />
