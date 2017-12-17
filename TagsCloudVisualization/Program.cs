@@ -24,12 +24,19 @@ namespace TagsCloudVisualization
             if (!options.IsValid(out var message)) Console.WriteLine(message);
             else
             {
-                Visualize(options).Save("tagsCloud.png");
-                Console.WriteLine("Done");
+                var visualizationResult = Visualize(options);
+                if (visualizationResult.IsSuccess)
+                {
+                    visualizationResult.Value.Save("tagsCloud.png");
+                    Console.WriteLine("Done");
+                }
+                else
+                    Console.WriteLine(visualizationResult.Error);
+
             }
         }
 
-        private static Bitmap Visualize(CloudOptions cloudOptions)
+        private static Result<Bitmap> Visualize(CloudOptions cloudOptions)
         {
             var width = cloudOptions.Width == 0 ? Screen.PrimaryScreen.Bounds.Width : cloudOptions.Width;
             var height = cloudOptions.Height == 0 ? Screen.PrimaryScreen.Bounds.Height : cloudOptions.Height;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TagsCloudVisualization.CloudDesign;
@@ -44,11 +45,12 @@ namespace TagsCloudVisualization
             return tagCloud;
         }
 
-        public Bitmap Visualize(string filePath)
+        public Result<Bitmap> Visualize(string filePath)
         {
-            var tags = tagReader.ReadTags(filePath);
-            var handledTags = HandleTags(tags);
-            return Visualize(handledTags);
+            return tagReader
+                .ReadTags(filePath)
+                .Then(HandleTags)
+                .Then(Visualize);
         }
 
         private Dictionary<string, int> HandleTags(Dictionary<string, int> tags)
