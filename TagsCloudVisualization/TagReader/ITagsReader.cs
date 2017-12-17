@@ -4,6 +4,6 @@ namespace TagsCloudVisualization.TagReader
 {
     public interface ITagsReader
     {
-        Dictionary<string, int> ReadTags(string filePath);
+        Result<Dictionary<string, int>> ReadTags(string filePath);
     }
 }
