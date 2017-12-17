@@ -27,8 +27,8 @@ namespace TagsCloudVisualization.RectangleLayouter
         {
             var leftTopPointX = center.X - size.Width / 2;
             var leftTopPointY = center.Y - size.Height / 2;
-            var leftTopPoint = new Point(leftTopPointX,leftTopPointY);
-            return new Rectangle(leftTopPoint,size);
+            var leftTopPoint = new Point(leftTopPointX, leftTopPointY);
+            return new Rectangle(leftTopPoint, size);
         }
 
         public Rectangle PutNextRectangle(Size rectangleSize)

@@ -6,8 +6,7 @@ namespace TagsCloudVisualization.CloudShape
 {
     class SpiralCloudShape : ICloudShape
     {
-        
-        private int index=-1;
+        private int index = -1;
         private readonly Point center;
         private readonly double spreading;
 
@@ -23,7 +22,7 @@ namespace TagsCloudVisualization.CloudShape
         {
             var oldPoint = Current;
             index++;
-            while(oldPoint.Equals(Current)||!IsPositive(Current))
+            while(oldPoint.Equals(Current) || !IsPositive(Current))
                     index++;
             return true;
         }

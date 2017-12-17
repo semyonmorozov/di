@@ -64,7 +64,7 @@ namespace TagsCloudVisualization
         private static List<string> ReadStringsFromTxt(string path)
         {
             var strings = new List<string>();
-            using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
+            using (var sr = new StreamReader(path, System.Text.Encoding.Default))
             {
                 string line;
                 while((line=sr.ReadLine())!=null)

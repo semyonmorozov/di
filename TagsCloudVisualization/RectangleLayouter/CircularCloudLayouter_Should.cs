@@ -34,7 +34,7 @@ namespace TagsCloudVisualization.RectangleLayouter
             return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
 
-        private CircularCloudLayouter FillUpLayout(CircularCloudLayouter layouter, int numOfRectangles)
+        private static CircularCloudLayouter FillUpLayout(CircularCloudLayouter layouter, int numOfRectangles)
         {
             var rnd = new Random();
             for (var i = 0; i < numOfRectangles; i++)
