@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using Autofac;
 using CommandLine;
@@ -18,22 +16,14 @@ namespace TagsCloudVisualization
         static void Main(string[] args)
         {
             var options = new CloudOptions();
-
             if (!Parser.Default.ParseArgumentsStrict(args, options)) return;
-
-            if (!options.IsValid(out var message)) Console.WriteLine(message);
-            else
-            {
-                var visualizationResult = Visualize(options);
-                if (visualizationResult.IsSuccess)
-                {
-                    visualizationResult.Value.Save("tagsCloud.png");
-                    Console.WriteLine("Done");
-                }
-                else
-                    Console.WriteLine(visualizationResult.Error);
-
-            }
+            options.IsValid()
+                .Then(BuildContainer)
+                .Then(c => c.Resolve<TagsCloudVisualizator>())
+                .Then(v => v.Visualize(options.TagsFile))
+                .Then(b => b.Save("tagsCloud.png"))
+                .Then(b => Console.WriteLine("Done"))
+                .OnFail(Console.WriteLine);
         }
 
         private static IContainer BuildContainer(CloudOptions cloudOptions)
