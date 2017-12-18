@@ -9,32 +9,12 @@ namespace TagsCloudVisualization.TagReader
     {
         public Result<Dictionary<string, int>> ReadTags(string filePath)
         {
-            return ReadStringsFromFile(filePath).Then(ParseTags);
+            return Result.Of(() => File.ReadAllLines(filePath).ToList())
+                .Then(ParseTags)
+                .RefineError("An error occurred with the file " + filePath);
         }
 
-        public Result<List<string>> ReadStringsFromFile(string filePath)
-        {
-            try
-            {
-                var strings = new List<string>();
-                using (var file = new StreamReader(filePath))
-                {
-                    while (true)
-                    {
-                        var line = file.ReadLine();
-                        if (line == null) break;
-                        strings.Add(line);
-                    }
-                }
-                return strings;
-            }
-            catch (FileNotFoundException e)
-            {
-                return Result.Fail<List<string>>(e.Message);
-            }
-        }
-
-        public Result<Dictionary<string, int>> ParseTags(List<string> strings)
+        private Result<Dictionary<string, int>> ParseTags(List<string> strings)
         {
             var tags = new Dictionary<string, int>();
             var splitedStrings = strings.Select(s => s.Split(' ')).ToArray();

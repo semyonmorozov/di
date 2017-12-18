@@ -36,7 +36,7 @@ namespace TagsCloudVisualization
             }
         }
 
-        private static Result<Bitmap> Visualize(CloudOptions cloudOptions)
+        private static IContainer BuildContainer(CloudOptions cloudOptions)
         {
             var width = cloudOptions.Width == 0 ? Screen.PrimaryScreen.Bounds.Width : cloudOptions.Width;
             var height = cloudOptions.Height == 0 ? Screen.PrimaryScreen.Bounds.Height : cloudOptions.Height;
@@ -56,29 +56,15 @@ namespace TagsCloudVisualization
             builder.RegisterType<TagsUnifier>().As<ITagsHandler>();
             if (cloudOptions.ForbiddenWords!=null)
             {
-                var filter = new WordsFilter(ReadStringsFromTxt(cloudOptions.ForbiddenWords));
+                var filter = new WordsFilter(cloudOptions.ForbiddenWords);
                 builder.Register(f => filter).As<ITagsHandler>();
             }
             builder.RegisterType<TagsCloudVisualizator>();
 
-            var container = builder.Build();
-
-            var vizualizator = container.Resolve<TagsCloudVisualizator>();
-
-            return vizualizator.Visualize(cloudOptions.TagsFile);
+            return builder.Build();
         }
 
-        private static List<string> ReadStringsFromTxt(string path)
-        {
-            var strings = new List<string>();
-            using (var sr = new StreamReader(path, System.Text.Encoding.Default))
-            {
-                string line;
-                while((line=sr.ReadLine())!=null)
-                    strings.Add(line);
-            }
-            return strings;
-        }
+        
 }
 
     

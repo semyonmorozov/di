@@ -5,7 +5,7 @@ namespace TagsCloudVisualization.TagHandler
 {
     public class TagsUnifier : ITagsHandler
     {
-        public Dictionary<string, int> Handle(Dictionary<string, int> tags)
+        public Result<Dictionary<string, int>> Handle(Dictionary<string, int> tags)
         {
             return tags.Keys.ToDictionary(word => word.ToLower(), word => tags[word]);
         }
