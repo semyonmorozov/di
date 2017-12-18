@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TagsCloudVisualization.CloudDesign;
@@ -26,11 +25,11 @@ namespace TagsCloudVisualization
             tagCloud = new Bitmap(cloudDesign.CloudWidth, cloudDesign.CloudHeight);
         }
 
-        private Bitmap Visualize(Dictionary<string, int>tags)
+        private Result<Bitmap> Visualize(Dictionary<string, int>tags)
         {
             var drawer = Graphics.FromImage(tagCloud);
             drawer.Clear(cloudDesign.BackgroundColor);
-
+            var border = new Rectangle(0, 0, cloudDesign.CloudWidth, cloudDesign.CloudHeight);
             foreach (var tag in tags)
             {
                 var word = tag.Key;
@@ -38,6 +37,8 @@ namespace TagsCloudVisualization
                 var font = cloudDesign.GetFont(weight);
                 var textSize = Size.Ceiling(drawer.MeasureString(word, font));
                 var rectangle = layouter.PutNextRectangle(textSize);
+                if (!border.Contains(rectangle))
+                    return Result.Fail<Bitmap>("Cloud is too large for resolution " + cloudDesign.CloudWidth + "x" + cloudDesign.CloudHeight);
                 var br = cloudDesign.GetStringBrush();
                 drawer.DrawString(word, font, br, rectangle);
             }
@@ -53,9 +54,9 @@ namespace TagsCloudVisualization
                 .Then(Visualize);
         }
 
-        private Dictionary<string, int> HandleTags(Dictionary<string, int> tags)
+        private Result<Dictionary<string, int>> HandleTags(Dictionary<string, int> tags)
         {
-            return tagHandlerers.Aggregate(tags, (current, handler) => handler.Handle(current));
+            return tagHandlerers.Aggregate(Result.Ok(tags), (current, handler) => current.Then(handler.Handle));
         }
     }
 }
