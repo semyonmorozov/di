@@ -32,12 +32,14 @@ namespace TagsCloudVisualization
             
             foreach (var tag in tags)
             {
-                var word = tag.Key;
-                var weight = tag.Value;
-                var font = cloudDesign.GetFont(weight);
-                var textSize = Size.Ceiling(drawer.MeasureString(word, font));
-                var rectangle = layouter.PutNextRectangle(textSize);
-                drawer.DrawString(word, font, br, rectangle);
+                var getFontResult = cloudDesign.GetFont(tag.Value);
+                var layoutResult = getFontResult
+                    .Then(font => drawer.MeasureString(tag.Key, font))
+                    .Then(Size.Ceiling)
+                    .Then(layouter.PutNextRectangle)
+                    .Then(r=> drawer.DrawString(tag.Key, getFontResult.Value, cloudDesign.GetStringBrush(), r));
+                if (!layoutResult.IsSuccess)
+                    return Result.Fail<Bitmap>(layoutResult.Error);
             }
             
             return tagCloud;
