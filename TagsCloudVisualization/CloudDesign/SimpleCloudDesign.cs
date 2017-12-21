@@ -18,9 +18,12 @@ namespace TagsCloudVisualization.CloudDesign
             this.stringBrush = stringBrush;
         }
 
-        public Font GetFont(int weight)
+        public Result<Font> GetFont(int weight)
         {
-            return new Font(fontName,weight);
+            var font = new Font(fontName, weight);
+            if(fontName!=font.Name)
+                return Result.Fail<Font>("Font "+fontName+ " not found in our system. Please install it or choose another font");
+            return new Font(fontName, weight);
         }
 
         public Brush GetStringBrush()

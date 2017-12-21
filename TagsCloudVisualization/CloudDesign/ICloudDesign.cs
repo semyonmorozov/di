@@ -8,7 +8,7 @@ namespace TagsCloudVisualization.CloudDesign
         int CloudWidth { get; }
         int CloudHeight { get; }
 
-        Font GetFont(int weight);
+        Result<Font> GetFont(int weight);
 
         Brush GetStringBrush();
     }
