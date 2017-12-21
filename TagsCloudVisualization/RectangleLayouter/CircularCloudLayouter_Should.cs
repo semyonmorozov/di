@@ -46,7 +46,7 @@ namespace TagsCloudVisualization.RectangleLayouter
         public void SetUp()
         {
             var cloudDesign = new SimpleCloudDesign(Color.FromName("White"), "", new SolidBrush(Color.FromName("Black")), screenBounds);
-            layouter = new CircularCloudLayouter(new SpiralCloudShape(cloudDesign));
+            layouter = new CircularCloudLayouter(new SpiralCloudShape(cloudDesign),cloudDesign);
         }
 
         [TestCase(0)]

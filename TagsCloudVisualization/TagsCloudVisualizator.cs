@@ -29,7 +29,7 @@ namespace TagsCloudVisualization
         {
             var drawer = Graphics.FromImage(tagCloud);
             drawer.Clear(cloudDesign.BackgroundColor);
-            var border = new Rectangle(0, 0, cloudDesign.CloudWidth, cloudDesign.CloudHeight);
+            
             foreach (var tag in tags)
             {
                 var word = tag.Key;
@@ -37,9 +37,6 @@ namespace TagsCloudVisualization
                 var font = cloudDesign.GetFont(weight);
                 var textSize = Size.Ceiling(drawer.MeasureString(word, font));
                 var rectangle = layouter.PutNextRectangle(textSize);
-                if (!border.Contains(rectangle))
-                    return Result.Fail<Bitmap>("Cloud is too large for resolution " + cloudDesign.CloudWidth + "x" + cloudDesign.CloudHeight);
-                var br = cloudDesign.GetStringBrush();
                 drawer.DrawString(word, font, br, rectangle);
             }
             

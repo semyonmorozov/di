@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TagsCloudVisualization.CloudDesign;
 using TagsCloudVisualization.CloudShape;
 
 namespace TagsCloudVisualization.RectangleLayouter
@@ -8,6 +9,7 @@ namespace TagsCloudVisualization.RectangleLayouter
     class CircularCloudLayouter : IRectangleLayouter
     {
         private readonly ICloudShape cloudShape;
+        private readonly Rectangle border;
 
         private readonly List<Rectangle> layout = new List<Rectangle>();
 
@@ -18,9 +20,10 @@ namespace TagsCloudVisualization.RectangleLayouter
             return copyOfLayout.ToList();
         }
 
-        public CircularCloudLayouter(ICloudShape cloudShape)
+        public CircularCloudLayouter(ICloudShape cloudShape, ICloudDesign cloudDesign)
         {
             this.cloudShape = cloudShape;
+            border = new Rectangle(0, 0, cloudDesign.CloudWidth, cloudDesign.CloudHeight);
         }
 
         private static Rectangle CreateRecnagleByCenter(Point center, Size size)
@@ -31,7 +34,7 @@ namespace TagsCloudVisualization.RectangleLayouter
             return new Rectangle(leftTopPoint, size);
         }
 
-        public Rectangle PutNextRectangle(Size rectangleSize)
+        public Result<Rectangle> PutNextRectangle(Size rectangleSize)
         {
             cloudShape.MoveNext();
             var rectangle = CreateRecnagleByCenter(cloudShape.Current, rectangleSize);
@@ -42,6 +45,8 @@ namespace TagsCloudVisualization.RectangleLayouter
             }
             layout.Add(rectangle);
             cloudShape.Reset();
+            if (!border.Contains(rectangle))
+                return Result.Fail<Rectangle>("Cloud is too large for resolution " + border.Width + "x" + border.Height);
             return rectangle;
         }
     }
